@@ -20,13 +20,17 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import com.rbbsolucoes.controleseubolso.model.enums.StatusLancamento;
 import com.rbbsolucoes.controleseubolso.model.enums.TipoLancamento;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "lancamento", schema = "controleseubolso")
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Lancamento {
 
 	@Id
@@ -35,7 +39,7 @@ public class Lancamento {
 	private Long id;
 	
 	@Column(name = "descricao")
-	private String decricao;
+	private String descricao;
 	
 	@Column(name = "mes")
 	private Integer mes;
@@ -44,7 +48,7 @@ public class Lancamento {
 	private Integer ano;
 	
 	@ManyToOne
-	@JoinColumn
+	@JoinColumn(name = "id_usuario")
 	private Usuario usuario;
 	
 	@Column(name = "valor")
@@ -71,11 +75,11 @@ public class Lancamento {
 	}
 
 	public String getDecricao() {
-		return decricao;
+		return descricao;
 	}
 
 	public void setDecricao(String decricao) {
-		this.decricao = decricao;
+		this.descricao = decricao;
 	}
 
 	public Integer getMes() {
@@ -140,7 +144,7 @@ public class Lancamento {
 		int result = 1;
 		result = prime * result + ((ano == null) ? 0 : ano.hashCode());
 		result = prime * result + ((dataCadastro == null) ? 0 : dataCadastro.hashCode());
-		result = prime * result + ((decricao == null) ? 0 : decricao.hashCode());
+		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((mes == null) ? 0 : mes.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
@@ -169,10 +173,10 @@ public class Lancamento {
 				return false;
 		} else if (!dataCadastro.equals(other.dataCadastro))
 			return false;
-		if (decricao == null) {
-			if (other.decricao != null)
+		if (descricao == null) {
+			if (other.descricao != null)
 				return false;
-		} else if (!decricao.equals(other.decricao))
+		} else if (!descricao.equals(other.descricao))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -203,7 +207,7 @@ public class Lancamento {
 
 	@Override
 	public String toString() {
-		return "Lancamentos [id=" + id + ", decricao=" + decricao + ", mes=" + mes + ", ano=" + ano + ", usuario="
+		return "Lancamentos [id=" + id + ", decricao=" + descricao + ", mes=" + mes + ", ano=" + ano + ", usuario="
 				+ usuario + ", valor=" + valor + ", dataCadastro=" + dataCadastro + ", tipo=" + tipo + ", status="
 				+ status + "]";
 	}

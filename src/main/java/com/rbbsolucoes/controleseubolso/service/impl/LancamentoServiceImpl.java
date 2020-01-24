@@ -3,17 +3,18 @@ package com.rbbsolucoes.controleseubolso.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
-
-import javax.transaction.Transactional;
+import java.util.Optional;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rbbsolucoes.controleseubolso.exception.RegraNegocioException;
 import com.rbbsolucoes.controleseubolso.model.entity.Lancamento;
 import com.rbbsolucoes.controleseubolso.model.enums.StatusLancamento;
+import com.rbbsolucoes.controleseubolso.model.enums.TipoLancamento;
 import com.rbbsolucoes.controleseubolso.model.repository.LancamentoRepository;
 import com.rbbsolucoes.controleseubolso.service.LancamentoService;
 
@@ -31,7 +32,7 @@ public class LancamentoServiceImpl implements LancamentoService{
 	@Transactional
 	public Lancamento salvar(Lancamento lancamento) {
 		validar(lancamento);
-		lancamento.setStatus(StatusLancamento.PEDENTE);
+		lancamento.setStatus(StatusLancamento.PENDENTE);
 		return repository.save(lancamento);
 	}
 
@@ -88,12 +89,34 @@ public class LancamentoServiceImpl implements LancamentoService{
 		}
 		
 		if(lancamento.getValor() == null || lancamento.getValor().compareTo(BigDecimal.ZERO) < 1) {
-			throw new RegraNegocioException("Informe um Valr válido.");
+			throw new RegraNegocioException("Informe um Valor válido.");
 		}
 		
 		if(lancamento.getTipo() == null) {
 			throw new RegraNegocioException("Informe um Tipo de Lançamento válido.");
 		}
+	}
+
+	@Override
+	public Optional<Lancamento> obterPorId(Long id) {
+		return  repository.findById(id);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public BigDecimal obterSaldoPorUsuario(Long id) {
+		
+		BigDecimal receitas = repository.obterSaldoPorTipoLancamentoUsuario(id, TipoLancamento.RECEITA);
+		BigDecimal despesas = repository.obterSaldoPorTipoLancamentoUsuario(id, TipoLancamento.DESPESA);
+		
+		if(receitas == null) {
+			receitas = BigDecimal.ZERO;
+		}
+		
+		if(despesas == null) {
+			despesas = BigDecimal.ZERO;
+		}
+		return receitas.subtract(despesas);
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.rbbsolucoes.controleseubolso.service;
 
+import java.util.Optional;
+
 import com.rbbsolucoes.controleseubolso.model.entity.Usuario;
 
 public interface UsuarioService {
@@ -10,4 +12,6 @@ public interface UsuarioService {
 	
 	void validarEmail(String email);
 
+	Optional<Usuario> obterPorId(Long id);
+	
 }

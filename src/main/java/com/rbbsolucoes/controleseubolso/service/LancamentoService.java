@@ -3,7 +3,9 @@ package com.rbbsolucoes.controleseubolso.service;
 import com.rbbsolucoes.controleseubolso.model.entity.Lancamento;
 import com.rbbsolucoes.controleseubolso.model.enums.StatusLancamento;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface LancamentoService {
 	
@@ -18,5 +20,9 @@ public interface LancamentoService {
 	void atualizaStatus(Lancamento lancamento, StatusLancamento status);	
 	
 	void validar(Lancamento lancamento);
+	
+	Optional<Lancamento> obterPorId(Long id);
+	
+	BigDecimal obterSaldoPorUsuario(Long id);
 }
 
